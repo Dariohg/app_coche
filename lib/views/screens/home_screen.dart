@@ -10,45 +10,74 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Escuchamos los cambios en el ViewModel
     final maintenanceViewModel = Provider.of<MaintenanceViewModel>(context);
     final history = maintenanceViewModel.maintenanceHistory;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
-      appBar: AppBar(
-        title: Text(
-          'Historial de Mantenimiento',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Theme.of(context).colorScheme.background, const Color(0xFF1E293B)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: history.isEmpty
-          ? Center(
-        child: Text(
-          'No hay mantenimientos registrados.',
-          style: GoogleFonts.poppins(color: Colors.white54, fontSize: 16),
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              expandedHeight: 120.0,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(
+                  'Historial',
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            history.isEmpty
+                ? SliverToBoxAdapter(
+              child: Center(
+                heightFactor: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.inbox_outlined, size: 80, color: Colors.white24),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No hay mantenimientos',
+                      style: GoogleFonts.poppins(color: Colors.white54, fontSize: 18),
+                    ),
+                    Text(
+                      'Añade uno con el botón +',
+                      style: GoogleFonts.poppins(color: Colors.white38, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            )
+                : SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final maintenance = history[index];
+                  return MaintenanceCard(maintenance: maintenance);
+                },
+                childCount: history.length,
+              ),
+            ),
+          ],
         ),
-      )
-          : ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: history.length,
-        itemBuilder: (context, index) {
-          final maintenance = history[index];
-          return MaintenanceCard(maintenance: maintenance);
-        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navegar a la pantalla para añadir un nuevo mantenimiento
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddMaintenanceScreen()),
           );
         },
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),

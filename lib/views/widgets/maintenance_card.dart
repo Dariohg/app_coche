@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/maintenance.dart';
 import 'package:intl/intl.dart';
-
+import '../../models/maintenance.dart';
 
 class MaintenanceCard extends StatelessWidget {
   final Maintenance maintenance;
@@ -11,64 +10,104 @@ class MaintenanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat('dd MMM, yyyy').format(maintenance.dueDate);
+    final formattedDate = DateFormat('dd MMM, yyyy', 'es_MX').format(maintenance.dueDate);
     final formattedCost = NumberFormat.currency(locale: 'es_MX', symbol: '\$').format(maintenance.cost);
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      color: const Color(0xFF16213E).withOpacity(0.8),
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              maintenance.title,
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              maintenance.description,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
-            ),
-            const SizedBox(height: 12),
-            const Divider(color: Colors.blueAccent),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today, color: Colors.blueAccent, size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      formattedDate,
-                      style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
-                    ),
-                  ],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.surface.withOpacity(0.8),
+            Theme.of(context).colorScheme.surface,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 6,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                Text(
-                  formattedCost,
-                  style: GoogleFonts.poppins(
-                    color: Colors.greenAccent,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        maintenance.title,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        maintenance.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(color: Colors.white70, height: 1.5),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildInfoChip(
+                            context,
+                            icon: Icons.calendar_today_outlined,
+                            text: formattedDate,
+                          ),
+                          _buildInfoChip(
+                            context,
+                            icon: Icons.attach_money_rounded,
+                            text: formattedCost,
+                            color: Colors.green.shade300,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  Widget _buildInfoChip(BuildContext context, {required IconData icon, required String text, Color? color}) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: color ?? Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            color: color ?? Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
 }
+

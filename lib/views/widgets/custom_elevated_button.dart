@@ -2,38 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  final VoidCallback? onPressed;
   final String text;
-  final bool isLoading;
+  final VoidCallback onPressed;
 
   const CustomElevatedButton({
     super.key,
-    required this.onPressed,
     required this.text,
-    this.isLoading = false,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return Container(
+      decoration: BoxDecoration(
+        // Le añadimos un gradiente al botón para que resalte más
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.secondary,
+            Theme.of(context).colorScheme.primary,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          text,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
   }
 }
+
