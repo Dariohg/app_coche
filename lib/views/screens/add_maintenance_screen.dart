@@ -6,6 +6,7 @@ import 'package:app_coche/views/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 class AddMaintenanceScreen extends StatefulWidget {
   const AddMaintenanceScreen({super.key});
@@ -19,7 +20,14 @@ class _AddMaintenanceScreenState extends State<AddMaintenanceScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _costController = TextEditingController();
+  final _noScreenshot = NoScreenshot.instance;
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _noScreenshot.screenshotOff();
+  }
 
   void _saveMaintenance() {
     if (_formKey.currentState!.validate()) {
@@ -30,10 +38,8 @@ class _AddMaintenanceScreenState extends State<AddMaintenanceScreen> {
         cost: double.tryParse(_costController.text) ?? 0.0,
       );
 
-      // Usamos el ViewModel para añadir el mantenimiento
       Provider.of<MaintenanceViewModel>(context, listen: false).addMaintenance(newMaintenance);
 
-      // Regresamos a la pantalla anterior
       Navigator.pop(context);
     }
   }
@@ -43,6 +49,7 @@ class _AddMaintenanceScreenState extends State<AddMaintenanceScreen> {
     _titleController.dispose();
     _descriptionController.dispose();
     _costController.dispose();
+    // No es necesario desactivar el bloqueo aquí, porque volveremos a HomeScreen
     super.dispose();
   }
 
