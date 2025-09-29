@@ -1,3 +1,4 @@
+import 'package:app_coche/viewmodels/auth_viewmodel.dart';
 import 'package:app_coche/views/screens/add_maintenance_screen.dart';
 import 'package:app_coche/views/widgets/maintenance_card.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +57,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                 ),
               ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.logout, color: Colors.white70),
+                  tooltip: 'Cerrar Sesión',
+                  onPressed: () {
+                    Provider.of<AuthViewModel>(context, listen: false).logout();
+                  },
+                ),
+              ],
+
             ),
             history.isEmpty
                 ? SliverToBoxAdapter(
